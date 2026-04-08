@@ -42,21 +42,30 @@ public class AuthService {
     
     // ✅ YOUR METHODS (UNCHANGED)
     public LoginResponse register(RegisterRequest request) {
+        // ✅ Validate email uniqueness
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
         
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(User.Role.valueOf(request.getUserType().toUpperCase()));
-        
-        User savedUser = userRepository.save(user);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getEmail());
-        String jwtToken = jwtService.generateToken(userDetails);
-        
-        return new LoginResponse(jwtToken, savedUser);
+        try {
+            User user = new User();
+            user.setName(request.getName().trim());
+            user.setEmail(request.getEmail().trim().toLowerCase());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setRole(User.Role.valueOf(request.getUserType().toUpperCase()));
+            // ✅ active is auto-set by BaseEntity
+            
+            User savedUser = userRepository.save(user);
+            
+            UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getEmail());
+            String jwtToken = jwtService.generateToken(userDetails);
+            
+            return new LoginResponse(jwtToken, savedUser);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid user type: " + request.getUserType());
+        } catch (Exception e) {
+            throw new RuntimeException("Registration failed: " + e.getMessage());
+        }
     }
     
     public LoginResponse login(LoginRequest request) {

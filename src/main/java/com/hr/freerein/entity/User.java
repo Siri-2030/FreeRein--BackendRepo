@@ -33,11 +33,11 @@ public class User extends BaseEntity {
     @Column(length = 50)
     private Role role = Role.VICTIM;  // ✅ Fixed: userType → Role enum
     
-    @Column(name = "active")
-    private boolean active = true;
+   // @Column(name = "active")
+   // private boolean active = true;
     
     // ✅ Relationships
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)	
     private List<SafetyPlan> safetyPlans;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -56,8 +56,8 @@ public class User extends BaseEntity {
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
     
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+   // public boolean isActive() { return active; }
+    //public void setActive(boolean active) { this.active = active; }
     
     // ✅ UserDetails implementation
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -68,7 +68,7 @@ public class User extends BaseEntity {
     public boolean isAccountNonExpired() { return true; }
     public boolean isAccountNonLocked() { return true; }
     public boolean isCredentialsNonExpired() { return true; }
-    public boolean isEnabled() { return active; }
+   // public boolean isEnabled() { return active; }
     
     public enum Role {
         ADMIN, VICTIM, COUNSELLOR, LEGAL_ADVISOR

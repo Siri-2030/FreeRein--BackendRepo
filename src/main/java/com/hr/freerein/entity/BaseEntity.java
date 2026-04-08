@@ -21,7 +21,7 @@ public abstract class BaseEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     
-    @Column(name = "active")
+    @Column(name = "active", nullable = false)
     private boolean active = true;
     
     // ✅ MANUAL GETTERS/SETTERS
