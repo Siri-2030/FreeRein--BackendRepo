@@ -14,7 +14,7 @@ public class LoginRequest {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
     
-    // ✅ MANUAL GETTERS/SETTERS
+    
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
     

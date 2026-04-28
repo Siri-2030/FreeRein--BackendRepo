@@ -54,7 +54,8 @@ public class AuthService {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setRole(User.Role.valueOf(request.getUserType().toUpperCase()));
             // ✅ active is auto-set by BaseEntity
-            
+            System.out.println("--- DEBUG: Received UserType from React: " + request.getUserType());
+            System.out.println("--- DEBUG: Setting Entity Role to: " + user.getRole());
             User savedUser = userRepository.save(user);
             
             UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getEmail());
