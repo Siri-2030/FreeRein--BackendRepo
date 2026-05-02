@@ -50,10 +50,18 @@
         </dependency>
 
         <!-- ✅ MySQL -->
-        <dependency>
+       <!-- <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
+        </dependency>-->
+        
+        <!--Postgress SQL -->
+        <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>42.6.2</version>
+        <scope>runtime</scope>
         </dependency>
 
         <!-- ✅ JWT (FIXED VERSIONS) -->
