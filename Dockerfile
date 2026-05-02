@@ -8,6 +8,7 @@ COPY mvnw pom.xml ./
 
 # FIX: Grant execution permission to the maven wrapper so Linux can run it
 RUN chmod +x ./mvnw 
+RUN chmod +x mvnw
 
 RUN ./mvnw dependency:go-offline
 
