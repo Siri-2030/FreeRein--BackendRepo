@@ -1,5 +1,7 @@
 package com.hr.freerein.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,6 +29,7 @@ public class User extends BaseEntity {
     @NotBlank
     @Size(min = 6)
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)   // never send the password hash to clients
     private String password;
     
     @Enumerated(EnumType.STRING)
@@ -37,12 +40,38 @@ public class User extends BaseEntity {
    // private boolean active = true;
     
     // ✅ Relationships
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)	
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SafetyPlan> safetyPlans;
     
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<SupportRequest> supportRequests;
     
+    // Profile (nullable wrappers so existing rows / old databases keep working)
+    @Column(length = 30)
+    private String phone;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
+    @Column(length = 150)
+    private String specialization;
+
+    private Boolean available;
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+
+    public String getSpecialization() { return specialization; }
+    public void setSpecialization(String specialization) { this.specialization = specialization; }
+
+    public Boolean getAvailable() { return available == null ? Boolean.TRUE : available; }
+    public void setAvailable(Boolean available) { this.available = available; }
+
     // ✅ MANUAL GETTERS/SETTERS
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -60,14 +89,15 @@ public class User extends BaseEntity {
     //public void setActive(boolean active) { this.active = active; }
     
     // ✅ UserDetails implementation
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
     
-    public String getUsername() { return email; }
-    public boolean isAccountNonExpired() { return true; }
-    public boolean isAccountNonLocked() { return true; }
-    public boolean isCredentialsNonExpired() { return true; }
+    @JsonIgnore public String getUsername() { return email; }
+    @JsonIgnore public boolean isAccountNonExpired() { return true; }
+    @JsonIgnore public boolean isAccountNonLocked() { return true; }
+    @JsonIgnore public boolean isCredentialsNonExpired() { return true; }
    // public boolean isEnabled() { return active; }
     
     public enum Role {

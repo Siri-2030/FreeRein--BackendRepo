@@ -69,15 +69,34 @@ public class AuthService {
         }
     }
     
+	/*
+	 * public LoginResponse login(LoginRequest request) { Authentication
+	 * authentication = authenticationManager.authenticate( new
+	 * UsernamePasswordAuthenticationToken(request.getEmail(),
+	 * request.getPassword()) );
+	 * 
+	 * UserDetails userDetails =
+	 * userDetailsService.loadUserByUsername(request.getEmail()); User user =
+	 * userRepository.findByEmail(request.getEmail()).orElseThrow(); String jwtToken
+	 * = jwtService.generateToken(userDetails);
+	 * 
+	 * return new LoginResponse(jwtToken, user); }
+	 */
+    
     public LoginResponse login(LoginRequest request) {
+
+        String email = request.getEmail().trim().toLowerCase();
+
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            new UsernamePasswordAuthenticationToken(email, request.getPassword())
         );
-        
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+        User user = userRepository.findByEmail(email).orElseThrow();
+
         String jwtToken = jwtService.generateToken(userDetails);
-        
+
         return new LoginResponse(jwtToken, user);
     }
     

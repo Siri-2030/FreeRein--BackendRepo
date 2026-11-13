@@ -22,6 +22,11 @@ public class ResourceService extends BaseEntityService<Resource, Long, ResourceR
     public List<Resource> getAllActiveResources() {
         return repository.findByActiveTrue();
     }
+    public Resource getResourceById(Long id) {
+        return repository.findById(id)
+            .filter(Resource::isActive)
+            .orElseThrow(() -> new RuntimeException("Resource not found: " + id));
+    }
 
     // ✅ IMPLEMENTED: Controller calls this
     public List<Resource> getResourcesByCategory(String category) {

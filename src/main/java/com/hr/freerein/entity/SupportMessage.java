@@ -11,6 +11,13 @@ public class SupportMessage extends BaseEntity {
     private SupportRequest supportRequest;
 
     private String senderId;
+    private String senderEmail;
+
+    @Column(length = 30)
+    private String senderRole;
+
+    private Boolean internal;
+    @Column(columnDefinition = "TEXT")
     private String content;
     private boolean fromSupporter = false;
     
@@ -18,6 +25,15 @@ public class SupportMessage extends BaseEntity {
     public SupportRequest getSupportRequest() { return supportRequest; }
     public void setSupportRequest(SupportRequest supportRequest) { this.supportRequest = supportRequest; }
     
+    public String getSenderEmail() { return senderEmail; }
+    public void setSenderEmail(String senderEmail) { this.senderEmail = senderEmail; }
+
+    public String getSenderRole() { return senderRole; }
+    public void setSenderRole(String senderRole) { this.senderRole = senderRole; }
+
+    public boolean isInternal() { return internal != null && internal; }
+    public void setInternal(Boolean internal) { this.internal = internal; }
+
     public String getSenderId() { return senderId; }
     public void setSenderId(String senderId) { this.senderId = senderId; }
     

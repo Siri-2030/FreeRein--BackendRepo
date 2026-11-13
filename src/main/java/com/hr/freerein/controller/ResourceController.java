@@ -27,6 +27,12 @@ public class ResourceController {
         return ResponseEntity.ok(ApiResponse.success(resources, "Resources retrieved"));
     }
     
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<Resource>> getResourceById(@PathVariable Long id) {
+        Resource resource = resourceService.getResourceById(id);
+        return ResponseEntity.ok(ApiResponse.success(resource, "Resource retrieved"));
+    }
+    
     @GetMapping("/category/{category}")
     public ResponseEntity<ApiResponse<List<Resource>>> getResourcesByCategory(@PathVariable String category) {
         List<Resource> resources = resourceService.getResourcesByCategory(category);

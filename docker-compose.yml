@@ -1,0 +1,35 @@
+# One command demo environment:  docker compose up --build
+# API:      http://localhost:8080
+# Swagger:  http://localhost:8080/swagger-ui.html
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: FreeRein_db
+      POSTGRES_USER: freerein
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-freerein_pw}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U freerein -d FreeRein_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/FreeRein_db
+      SPRING_DATASOURCE_USERNAME: freerein
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-freerein_pw}
+      JWT_SECRET: ${JWT_SECRET:-change-me-change-me-change-me-change-me-1234}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-*}
+      SEED_DEMO_USERS: ${SEED_DEMO_USERS:-true}
+
+volumes:
+  pgdata:
